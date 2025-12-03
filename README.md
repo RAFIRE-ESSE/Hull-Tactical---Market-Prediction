@@ -4,8 +4,8 @@ This repository contains a structured collection of experimental models designed
 
 ---
 
-###https://www.kaggle.com/code/mafiosoquasar/hull-starter-notebook/notebook
-###https://www.kaggle.com/competitions/hull-tactical-market-prediction
+### https://www.kaggle.com/code/mafiosoquasar/hull-starter-notebook/notebook
+### https://www.kaggle.com/competitions/hull-tactical-market-prediction
 
 ## **Project Architecture Overview**
 
