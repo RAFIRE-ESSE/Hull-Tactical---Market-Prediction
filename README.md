@@ -1,153 +1,162 @@
-Notebook Architecture Description
+# Hull Starter Notebook – Architecture Overview
 
-This notebook is structured as a multi-model experimental pipeline designed for the Hull Tactical Market Prediction task. Its architecture follows a modular and scalable layout, where each model is isolated in its own section but built on a shared data-loading foundation. The architecture can be divided into the following layers:
+This repository contains a structured collection of experimental models designed for the **Hull Tactical Market Prediction** task. The notebook includes multiple model variants (Model 1–7), each exploring different data pipelines, preprocessing strategies, and portfolio allocation logic within the constraints of the competition (investment bounds: `MIN_INVESTMENT = 0`, `MAX_INVESTMENT = 2`).
 
-1. Environment & Dependency Setup Layer
+---
 
-The notebook begins by importing all required libraries:
+## **Project Architecture Overview**
 
-pandas, polars, numpy for data processing
+The architecture of the notebook is built around a modular, multi-model experimentation framework. Each model follows a similar structure but implements its own feature engineering, data-handling logic, and prediction formulation.
 
-pathlib.Path for filesystem management
+### **1. Environment & Dependencies**
 
-Various utility modules for efficient I/O and dataset handling
+The notebook initializes the core scientific Python stack:
 
-This layer ensures all models operate on a consistent computational environment.
+* `pandas` and `polars` for fast data manipulation
+* `numpy` for numerical operations
+* `pathlib` for file system management
 
-2. Global Constraints & Parameter Layer
+This ensures a consistent baseline environment for all models.
 
-Before multiple models are defined, the notebook sets shared constraints:
+---
 
-MIN_INVESTMENT
+### **2. Data Layer**
 
-MAX_INVESTMENT
+Each model reads the dataset from the **Hull Tactical Market Prediction** competition files.
 
-DATA_PATH
+Typical components:
 
-These constant parameters enforce uniform investment boundaries and data paths across all models. They act as global business rules guiding model behavior.
+* Path definitions using `Path('/kaggle/input/...')`
+* Reading train/test files using **Pandas** or **Polars**
+* Selecting essential columns such as `date_id` and `forward_returns`
+* Optional merging of market features (E-features like `E1`, `E2`, ..., `E19`)
 
-3. Data Loading & Preparation Layer
+This layer abstracts dataset access and prepares structured input for modeling.
 
-Each model section loads data from:
+---
 
-/kaggle/input/hull-tactical-market-prediction/
+### **3. Feature Engineering Layer**
 
+Although minimal in early models, later models add more variation, such as:
 
-Typical preprocessing includes:
+* Selecting subsets of features
+* Handling missing values
+* Generating statistical transformations
+* Applying rolling or cross-sectional operations (depending on model)
 
-Selecting required features
+Each model is intentionally kept simple to reduce overfitting and ensure computational efficiency.
 
-Extracting forward returns
+---
 
-Creating train/test splits
+### **4. Modeling Layer**
 
-Preparing feature matrices or panel-style inputs
-This ensures every model uses the same underlying dataset, enabling fair benchmarking.
+Instead of deep-learning models, the notebook focuses on **rule‑based** or **statistical** allocation strategies.
 
-4. Model Modules (Model_1 → Model_7)
+Each model:
 
-The notebook organizes each predictive model into its own module:
+* Defines investment boundaries (`MIN_INVESTMENT`, `MAX_INVESTMENT`)
+* Computes a predicted allocation
+* Often uses simple transformations of forward returns or engineered signals
 
-Model_1 – Baseline Model
+This modular design allows rapid iteration.
 
-Simple rules or basic statistical forecasting
+---
 
-Establishes performance baseline
+### **5. Evaluation / Prediction Layer**
 
-Model_2 – Polars-based Model
+Each model generates predictions for submission:
 
-Utilizes Polars for extremely fast data manipulation
+* Predictions are shaped into the required format
+* Prediction dictionaries or DataFrames are created
+* Ensures the investment values fit within specified bounds
 
-Efficient for large-scale training
+Some models include timing utilities (`%%time`) to measure runtime performance.
 
-Model_3 – Pandas Feature Model
+---
 
-Loaded with many feature columns (E11, E12, …)
+### **6. Multi‑Model Layout**
 
-Flexible for experimentation with different feature sets
+The notebook organizes models as **distinct sections**, each labeled with markdown headers:
 
-Model_4 – Weighted/Rule-Based Optimization Model
+```
+## Model_1
+## Model_2
+## Model_3
+...
+## Model_7
+```
 
-Uses optimized bounds and investment limits
+Each block includes:
 
-More sophisticated risk-controlled strategy
+* Model-specific constants
+* Data loading logic
+* Feature preparation pipeline
+* Prediction logic
 
-Model_5 – Ensemble-like or Feature-Enhanced Model
+This structure is efficient for comparison and experimentation.
 
-Builds on earlier models
+---
 
-Often includes more complex selection logic
+## Folder / Code Structure Summary
 
-Uses extended feature sets
+*(As represented inside the notebook)*
 
-Model_6 – True Target Mapping Model
+```
+- imports
+- Model_1
+- Model_2
+- Model_3
+- Model_4
+- Model_5
+- Model_6
+- Model_7
+```
 
-Introduces dictionary structures holding true_targets_M6
+Each model follows a pattern:
 
-Likely evaluating predictions vs. actual future returns
+```
+[Set investment bounds]
+[Load data]
+[Select / engineer features]
+[Compute prediction]
+[Store output]
+```
 
-Useful for model diagnostics
+---
 
-Model_7 – High-Performance/Timed Model
+## Overall Description (for GitHub README)
 
-Uses %%time for benchmarking
+This notebook serves as a starter framework for building and testing multiple portfolio‑allocation models for the **Hull Tactical Market Prediction** challenge. It demonstrates:
 
-Focus on speed, optimization, or alternative modeling approach
+* Efficient dataset loading using Pandas and Polars
+* Multiple variations of simple rule‑based financial models
+* A clear modular structure for comparing model ideas
+* Consistent handling of prediction constraints required by the competition
 
-Each model is self-contained but follows the same conceptual template:
+The architecture supports experimentation, scalability, and a clear workflow for extending or replacing models.
 
-Load data
+---
 
-Preprocess features
+## Usage
 
-Generate predictions
+This notebook can be used to:
 
-Enforce investment bounds
+* Build financial prediction models
+* Experiment with different data-processing pipelines
+* Generate predictions for submission
+* Extend into more complex ML models if desired
 
-Prepare output
+---
 
-This modular structure makes it easy to:
+## License
 
-Compare models
+You may add a license depending on your repository requirements.
 
-Add new approaches
+---
 
-Debug individual sections
+If you'd like, I can:
 
-Run models independently
-
-5. Output & Submission Layer
-
-Although not fully visible in the extracted snapshot, notebooks of this competition typically:
-
-Combine model predictions
-
-Format them for Kaggle submission
-
-Possibly generate ensemble predictions
-
-This is likely present at the end of the notebook.
-
-Overall Architectural Style
-
-The notebook implements a clean, layered architecture:
-
-[Environment Setup]
-        ↓
-[Global Constraints]
-        ↓
-[Data Loading Block]
-        ↓
- ┌─────────────────────┐
- │  MODEL 1 MODULE     │
- ├─────────────────────┤
- │  MODEL 2 MODULE     │
- ├─────────────────────┤
- │  MODEL 3 MODULE     │
- ├─────────────────────┤
- │        ...          │
- ├─────────────────────┤
- │  MODEL 7 MODULE     │
- └─────────────────────┘
-        ↓
-[Prediction / Output Layer]
+* Convert this into a more formal technical documentation
+* Expand each model's description individually
+* Add diagrams (architecture flowchart)
+* Add badges, contribution guidelines, or setup instructions
